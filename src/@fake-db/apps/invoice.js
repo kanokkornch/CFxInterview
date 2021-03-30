@@ -12,7 +12,9 @@ const data = {
         companyEmail: 'don85@johnson.com',
         country: 'USA',
         contact: '(616) 865-4180',
-        name: 'Jordan Stevenson'
+        name: 'Jordan Stevenson',
+        postal: '36912',
+        taxNo: '1090137442116'
       },
       service: 'Software Development',
       total: 3428,
@@ -30,7 +32,9 @@ const data = {
         companyEmail: 'brenda49@taylor.info',
         country: 'Haiti',
         contact: '(226) 204-8287',
-        name: 'Stephanie Burns'
+        name: 'Stephanie Burns',
+        postal: '5200',
+        taxNo: '2782390692120'
       },
       service: 'UI/UX Design & Development',
       total: 5219,
@@ -48,7 +52,9 @@ const data = {
         companyEmail: 'smithtiffany@powers.com',
         country: 'Denmark',
         contact: '(955) 676-1076',
-        name: 'Tony Herrera'
+        name: 'Tony Herrera',
+        postal: '90823',
+        taxNo: '1417644553016'
       },
       service: 'Unlimited Extended License',
       total: 3719,
@@ -66,7 +72,9 @@ const data = {
         companyEmail: 'mejiageorge@lee-perez.com',
         country: 'Cambodia',
         contact: '(832) 323-6914',
-        name: 'Kevin Patton'
+        name: 'Kevin Patton',
+        postal: '67485',
+        taxNo: '1213991941715'
       },
       service: 'Software Development',
       total: 4749,
@@ -84,7 +92,9 @@ const data = {
         companyEmail: 'brandon07@pierce.com',
         country: 'Martinique',
         contact: '(970) 982-3353',
-        name: 'Mrs. Julie Donovan MD'
+        name: 'Mrs. Julie Donovan MD',
+        postal: '47497',
+        taxNo: '1148057860504'
       },
       service: 'UI/UX Design & Development',
       total: 4056,
@@ -965,3 +975,21 @@ mock.onGet('/api/invoice/clients').reply(() => {
   const clients = data.invoices.map(invoice => invoice.client)
   return [200, clients.slice(0, 5)]
 })
+
+// mock.onPost('/api/invoice/clients').reply(config => {
+//   // Get event from post data
+//   const clients = data.invoices.map(invoice => invoice.client)
+//   const { client } = JSON.parse(config.data)
+//   // const { event } = JSON.parse(config.data)
+
+//   const { length } = data.events
+//   let lastIndex = 0
+//   if (length) {
+//     lastIndex = data.events[length - 1].id
+//   }
+//   event.id = lastIndex + 1
+
+//   // data.events.push(event)
+
+//   return [201, { event }]
+// })

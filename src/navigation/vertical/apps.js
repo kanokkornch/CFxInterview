@@ -2,7 +2,7 @@ import { Mail, MessageSquare, CheckSquare, Calendar, FileText, Circle, ShoppingC
 
 export default [
   {
-    header: 'Apps & Pages'
+    header: 'เอกสาร'
   },
   {
     id: 'email',
@@ -33,6 +33,12 @@ export default [
     title: 'Invoice',
     icon: <FileText size={20} />,
     children: [
+      {
+        id: 'billingNote',
+        title: 'ใบวางบิล',
+        icon: <Circle size={12} />,
+        navLink: '/apps/invoice/billing'
+      },
       {
         id: 'invoiceList',
         title: 'List',
