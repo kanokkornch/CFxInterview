@@ -295,7 +295,6 @@ const AddCard = () => {
           </Row>
         </CardBody>
         {/* /Address and Contact */}
-
         {/* Product Details */}
         <CardBody className='invoice-padding invoice-product-details'>
           <Repeater count={count}>
