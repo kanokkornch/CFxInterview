@@ -125,22 +125,13 @@ const AddCard = () => {
                             <Input type='text' name='country' id='country' placeholder='สำนักงาน/สาขาเลขที่' defaultValue={customer.country} />
                         </FormGroup>
                     </Col>
-                    <Col className='text-blue' style={{ padding: '8.5rem 0rem 0rem 0rem' }}>
-                        <div className='cursor-pointer'>
-                            <Edit className='icon-with-text' />
-                            แก้ไขรายชื่อผู้ติดต่อ
-                        </div>
-                    </Col>
-                    <Col className='col-5 billing-padding'>
-                        <div className='d-flex justify-content-end'>
+                    <Col style={{ padding: '8.5rem 0rem 0rem 0rem' }} />
+                    <Col className='col-5 billing-padding' style={{ paddingLeft: '11rem' }}>
+                        {/* <div className='d-flex justify-content-end mb-5'>
                             {ActionButtonComponent('Printer', 'พิมพ์เอกสาร')}
                             {ActionButtonComponent('Download', 'ดาวน์โหลด')}
                             {ActionButtonComponent('MoreHorizontal', 'เพิ่มเติม')}
-                        </div>
-                        <div className='mt-2'>
-                            <div className='font-weight-600 font-size-16px mb-1'>จำนวนเงินรวมทั้งสิ้น</div>
-                            <div className='text-blue font-size-22px mb-2'>0.00</div>
-                        </div>
+                        </div> */}
                         <Row className='mb-1'>
                             <Col className='col-4'>วันที่:</Col>
                             <Col>
@@ -164,7 +155,7 @@ const AddCard = () => {
                                 <Flatpickr className='form-control' value={picker1} onChange={date => setPicker1(date)} id='default-picker-1' />
                             </Col>
                         </Row>
-                        <Row className='mb-1'>
+                        <Row>
                             <Col className='col-4'>พนักงานขาย:</Col>
                             <Col>
                                 <Select
@@ -191,7 +182,7 @@ const AddCard = () => {
                         </Row>
                     </Col>
                 </Row>
-                <hr className='mr-2 ml-2 mt-4 mb-4' />
+                <hr className='mr-2 ml-2 mt-2 mb-2' />
                 <Row className='pl-2 pr-2'>
                     <Col className='d-flex'>
                         <span className='custom-title-label'>ชื่อโปรเจค:</span>
@@ -201,7 +192,7 @@ const AddCard = () => {
                         <Input className='' type='text' name='projectName' />
                     </Col>
                 </Row>
-                <CardBody className='invoice-padding invoice-product-details bg-light mt-2'>
+                <CardBody className='invoice-padding invoice-product-details bg-light mt-2 ml-2 mr-2'>
                     <Row>
                         <Col className='mb-lg-0 mb-2 mt-lg-0 mt-2' lg='4' sm='12'>
                             <CardText className='col-title mb-md-50 mb-0'>ชื่อสินค้า/รายละเอียด</CardText>
@@ -216,7 +207,7 @@ const AddCard = () => {
                                 <Dropdown isOpen={dropdownOpen} toggle={() => setDropdownOpen(prevState => !prevState)} className='custom-dropdown'>
                                     <DropdownToggle caret>
                                         {discountUnit}
-                                        <ChevronDown  size={15}/>
+                                        <ChevronDown size={15} />
                                     </DropdownToggle>
                                     <DropdownMenu>
                                         <DropdownItem onClick={() => setDiscountUnit('(%)')}>เปอร์เซ็นต์(%)</DropdownItem>
@@ -313,7 +304,7 @@ const AddCard = () => {
                         }}
                     </Repeater>
                     <Row className='mt-1'>
-                        <Col sm='12' className='px-0'>
+                        <Col sm='12' className='px-0 ml-1'>
                             <Button.Ripple color='primary' size='sm' className='btn-add-new' onClick={() => setCount(count + 1)}>
                                 <Plus size={14} className='mr-25'></Plus>
                                 <span className='align-middle'>เพิ่มแถวรายการ</span>
@@ -340,25 +331,29 @@ const AddCard = () => {
                             </Col>
                         </Row>
                     </Col>
-                    <Col className='d-flex mr-2'>
-                        <Col>
-                            <p>รวมเป็นเงิน</p>
-                            <div className='d-flex'>ส่วนลด
-                            <Input
+                    <Col className='mr-2'>
+                        <div className='d-flex mb-1'>
+                            <Col>รวมเป็นเงิน</Col>
+                            <Col className='font-weight-600 text-right'>0.00</Col>
+                        </div>
+                        <div className='d-flex mb-1'>
+                            <Col className='d-flex'>ส่วนลด
+                                <Input
                                     type='text'
                                     name='totalDiscount'
                                     className='mr-1 ml-1 small-input text-right'
                                     defaultValue='0.00'
-                                /> %</div>
-                            <p>ราคาหลังหักส่วนลด</p>
-                            <p>จำนวนเงินรวมทั้งสิ้น</p>
-                        </Col>
-                        <Col className='d-flex flex-column align-items-end'>
-                            <p className='font-weight-600'>0.00</p>
-                            <p className='font-weight-600'>0.00</p>
-                            <p className='font-weight-600'>0.00</p>
-                            <p className='font-weight-600'>0.00</p>
-                        </Col>
+                                /> %</Col>
+                            <Col className='font-weight-600 text-right'>0.00</Col>
+                        </div>
+                        <div className='d-flex mb-1'>
+                            <Col>ราคาหลังหักส่วนลด</Col>
+                            <Col className='font-weight-600 text-right'>0.00</Col>
+                        </div>
+                        <div className='d-flex mb-1'>
+                            <Col>จำนวนเงินรวมทั้งสิ้น</Col>
+                            <Col className='font-weight-600 text-right'>0.00</Col>
+                        </div>
                     </Col>
                 </Row>
             </Card>
