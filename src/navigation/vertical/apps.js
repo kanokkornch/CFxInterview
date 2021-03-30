@@ -38,31 +38,31 @@ export default [
         title: 'ใบวางบิล',
         icon: <Circle size={12} />,
         navLink: '/apps/invoice/billing'
-      },
-      {
-        id: 'invoiceList',
-        title: 'List',
-        icon: <Circle size={12} />,
-        navLink: '/apps/invoice/list'
-      },
-      {
-        id: 'invoicePreview',
-        title: 'Preview',
-        icon: <Circle size={12} />,
-        navLink: '/apps/invoice/preview'
-      },
-      {
-        id: 'invoiceEdit',
-        title: 'Edit',
-        icon: <Circle size={12} />,
-        navLink: '/apps/invoice/edit'
-      },
-      {
-        id: 'invoiceAdd',
-        title: 'Add',
-        icon: <Circle size={12} />,
-        navLink: '/apps/invoice/add'
       }
+      // {
+      //   id: 'invoiceList',
+      //   title: 'List',
+      //   icon: <Circle size={12} />,
+      //   navLink: '/apps/invoice/list'
+      // },
+      // {
+      //   id: 'invoicePreview',
+      //   title: 'Preview',
+      //   icon: <Circle size={12} />,
+      //   navLink: '/apps/invoice/preview'
+      // },
+      // {
+      //   id: 'invoiceEdit',
+      //   title: 'Edit',
+      //   icon: <Circle size={12} />,
+      //   navLink: '/apps/invoice/edit'
+      // },
+      // {
+      //   id: 'invoiceAdd',
+      //   title: 'Add',
+      //   icon: <Circle size={12} />,
+      //   navLink: '/apps/invoice/add'
+      // }
     ]
   },
   {
