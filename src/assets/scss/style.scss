@@ -57,3 +57,53 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
 	min-width: max-content;
 	margin-right: 10px;
 }
+
+.delete-btn {
+	// background: rgb(197, 76, 76);
+	color: #fff;
+	width: inherit;
+    height: 2rem;
+}
+
+$weight: 600, 700;
+@each $number in $weight {
+	.font-weight-#{$number} {
+		font-weight: $number;
+	}
+}
+
+$size: 16px, 18px, 20px, 22px;
+@each $number in $size {
+	.font-size-#{$number} {
+		font-size: $number;
+	}
+}
+
+.small-input {
+	height: 1.714rem;
+	padding: 2px;
+}
+
+.custom-dropdown {
+	button {
+		background-color: transparent !important;
+		color: rgb(95, 94, 94) !important;
+		// padding: 0;
+		border: none;
+	}
+	button.dropdown-toggle {
+		padding: 0;
+		&::after {
+			visibility: hidden;
+		}
+		&.btn-secondary {
+			&:focus {
+				background-color: transparent !important;
+			}
+			&:active {
+				background-color: transparent !important;
+			}
+		}
+	}
+}
+    

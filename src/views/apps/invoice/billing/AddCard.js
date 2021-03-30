@@ -1,21 +1,25 @@
 import { Fragment, useState, useEffect } from 'react'
-import { 
-    Card, 
-    Row, 
-    Col, 
-    FormGroup, 
-    Button, 
-    Form, 
-    Label, 
-    Input, 
+import {
+    Card,
+    Row,
+    Col,
+    FormGroup,
+    Button,
+    Form,
+    Label,
+    Input,
     CustomInput,
     CardBody,
-    CardText
+    CardText,
+    Dropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem
 } from 'reactstrap'
 import Select, { components } from 'react-select'
 import { selectThemeColors } from '@utils'
 import axios from 'axios'
-import { Plus, Edit, Printer, Download, MoreHorizontal, X } from 'react-feather'
+import { Plus, Edit, Printer, Download, MoreHorizontal, X, ChevronDown } from 'react-feather'
 import Flatpickr from 'react-flatpickr'
 import Sidebar from '@components/sidebar'
 import Repeater from '@components/repeater'
@@ -27,9 +31,11 @@ const AddCard = () => {
     const [customer, setCustomer] = useState({ address: '', postal: '', taxNo: '', country: '' })
     const [customerList, setCustomerList] = useState([])
     const [picker, setPicker] = useState(new Date())
+    const [picker1, setPicker1] = useState(new Date())
     const [discount, setDiscount] = useState(false)
+    const [discountUnit, setDiscountUnit] = useState('(%)')
+    const [dropdownOpen, setDropdownOpen] = useState(false)
     const [tax, setTax] = useState(false)
-    const [dataTable, setDataTable] = useState([])
     const [count, setCount] = useState(3)
     const [options, setOptions] = useState([
         {
@@ -46,11 +52,6 @@ const AddCard = () => {
             setOptions(arr)
             setCustomerList(res.data)
         })
-        const data = []
-        for (let i = 1; i < 4; i++) {
-            data.push({ id: i, productName: '', productDetail: '', discountValue: '', taxValue: '', amount: '', amountUnit: '' })
-        }
-        setDataTable([...data])
     }, [])
     const countryOptions = [
         { value: 'australia', label: 'Australia' },
@@ -89,23 +90,17 @@ const AddCard = () => {
         action === 'discount' ? setDiscount(!discount) : setTax(!tax)
     }
 
-    const handleRemoveItem = (item) => {
-        const res = dataTable.filter((data, i) => item !== data)
-        console.log(res)
-        setDataTable(res)
-    }
-
     const deleteForm = e => {
         e.preventDefault()
         e.target.closest('.repeater-wrapper').remove()
-      }
+    }
     return (
         <Fragment>
             <Card className='pb-2'>
                 <Row className='pl-1 pr-1'>
                     <Col className='col-4 billing-padding'>
                         <FormGroup>
-                            <h5>ชื่อลูกค้า</h5>
+                            <h5 className='font-weight-600'>ชื่อลูกค้า</h5>
                             <Select
                                 className='react-select'
                                 classNamePrefix='select'
@@ -123,17 +118,19 @@ const AddCard = () => {
                             />
                         </FormGroup>
                         <FormGroup>
-                            <h5>รายละเอียด</h5>
-                            <Input type='textarea' name='address' id='address' rows='3' placeholder='รายละอียดที่อยู่' defaultValue={customer.address} />
-                            <Input type='text' name='postal' id='postal' placeholder='รหัสไปรษณีย์' defaultValue={customer.postal} />
-                            <Input type='text' name='taxNo' id='taxNo' placeholder='เลขประจำตัวผู้เสียภาษี' defaultValue={customer.taxNo} />
+                            <h5 className='font-weight-600'>รายละเอียด</h5>
+                            <Input type='textarea' className='mb-1' name='address' id='address' rows='3' placeholder='รายละเอียดที่อยู่' defaultValue={customer.address} />
+                            <Input type='text' className='mb-1' name='postal' id='postal' placeholder='รหัสไปรษณีย์' defaultValue={customer.postal} />
+                            <Input type='text' className='mb-1' name='taxNo' id='taxNo' placeholder='เลขประจำตัวผู้เสียภาษี' defaultValue={customer.taxNo} />
                             <Input type='text' name='country' id='country' placeholder='สำนักงาน/สาขาเลขที่' defaultValue={customer.country} />
                         </FormGroup>
                     </Col>
                     <Col className='text-blue' style={{ padding: '8.5rem 0rem 0rem 0rem' }}>
-                        <Edit className='icon-with-text' />
-                        แก้ไขรายชื่อผู้ติดต่อ
-                        </Col>
+                        <div className='cursor-pointer'>
+                            <Edit className='icon-with-text' />
+                            แก้ไขรายชื่อผู้ติดต่อ
+                        </div>
+                    </Col>
                     <Col className='col-5 billing-padding'>
                         <div className='d-flex justify-content-end'>
                             {ActionButtonComponent('Printer', 'พิมพ์เอกสาร')}
@@ -141,16 +138,16 @@ const AddCard = () => {
                             {ActionButtonComponent('MoreHorizontal', 'เพิ่มเติม')}
                         </div>
                         <div className='mt-2'>
-                            จำนวนเงินรวมทั้งสิ้น
-                            <p className='text-blue'>0.00</p>
+                            <div className='font-weight-600 font-size-16px mb-1'>จำนวนเงินรวมทั้งสิ้น</div>
+                            <div className='text-blue font-size-22px mb-2'>0.00</div>
                         </div>
-                        <Row>
+                        <Row className='mb-1'>
                             <Col className='col-4'>วันที่:</Col>
                             <Col>
                                 <Flatpickr className='form-control' value={picker} onChange={date => setPicker(date)} id='default-picker' />
                             </Col>
                         </Row>
-                        <Row>
+                        <Row className='mb-1'>
                             <Col className='col-4'>เครดิต (วัน):</Col>
                             <Col>
                                 <Select
@@ -161,13 +158,13 @@ const AddCard = () => {
                                 />
                             </Col>
                         </Row>
-                        <Row>
+                        <Row className='mb-1'>
                             <Col className='col-4'>ครบกำหนด:</Col>
                             <Col>
-                                <Flatpickr className='form-control' value={picker} onChange={date => setPicker(date)} id='default-picker' />
+                                <Flatpickr className='form-control' value={picker1} onChange={date => setPicker1(date)} id='default-picker-1' />
                             </Col>
                         </Row>
-                        <Row>
+                        <Row className='mb-1'>
                             <Col className='col-4'>พนักงานขาย:</Col>
                             <Col>
                                 <Select
@@ -204,89 +201,56 @@ const AddCard = () => {
                         <Input className='' type='text' name='projectName' />
                     </Col>
                 </Row>
-                {/* <Table borderLess responsive>
-                    <thead>
-                        <tr>
-                            <th>ชื่อสินค้า/รายละเอียด</th>
-                            {discount && <th>ส่วนลด</th>}
-                            {tax && <th>ภาษี</th>}
-                            <th>จำนวน</th>
-                            <th>หน่วย</th>
-                            <th>จำนวนต่อหน่วย</th>
-                            <th>ราคารวม</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {dataTable.map((item, index) => <tr key={index}>
-                            <td>
-                                <Select
-                                    className='react-select'
-                                    classNamePrefix='select'
-                                    options={[
-                                        { value: 'App Design', label: 'App Design' },
-                                        { value: 'App Customization', label: 'App Customization' },
-                                        { value: 'ABC Template', label: 'ABC Template' },
-                                        { value: 'App Development', label: 'App Development' }
-                                    ]}
-                                    isClearable={false}
-                                    name={`productName`}
-                                    onChange={(data) => { 
-                                        dataTable[index].productName = data.value
-                                        setDataTable(dataTable)
-                                     }}
-                                />
-                                <Input 
-                                type='text' 
-                                name={`${item}.productDetail`}
-                                />
-                            </td>
-                            {
-                                discount &&
-                                <td><Input type='text' name={`${item}.discountValue`} /></td>
-                            }
-                            {
-                                tax &&
-                                <td><Input type='text' name={`${item}.taxValue`} /></td>
-                            }
-                            <td>
-                                <Input type='text' name={`${item}.amount`} />
-                            </td>
-                            <td>
-                                <Select
-                                    name={`${item}.amountUnit`}
-                                    className='react-select'
-                                    classNamePrefix='select'
-                                    options={[
-                                        { value: 'piece', label: 'ชิ้น' },
-                                        { value: 'box', label: 'กล่อง' },
-                                        { value: 'pack', label: 'แพค' }
-                                    ]}
-                                    isClearable={false}
-                                />
-                            </td>
-                            <td>
-                                <span>0</span>
-                            </td>
-                            <td>
-                                <span>0</span>
-                            </td>
-                            <td>
-                                <Button
-                                    onClick={() => handleRemoveItem(item)}
-                                >
-                                    <X />
-                                </Button>
-                            </td>
-                        </tr>
-                        )}
-                        <Button
-                            onClick={() => setDataTable([...dataTable, { productName: '', id: dataTable.length ? dataTable[dataTable.length - 1].id + 1 : 1, productDetail: '', discountValue: '', taxValue: '', amount: '', amountUnit: '' }])}>
-                            <Plus /> เพิ่มแถวรายการ
-                        </Button>
-                    </tbody>
-                </Table> */}
-                <CardBody className='invoice-padding invoice-product-details'>
+                <CardBody className='invoice-padding invoice-product-details bg-light mt-2'>
+                    <Row>
+                        <Col className='mb-lg-0 mb-2 mt-lg-0 mt-2' lg='4' sm='12'>
+                            <CardText className='col-title mb-md-50 mb-0'>ชื่อสินค้า/รายละเอียด</CardText>
+                        </Col>
+                        <Col className='mb-lg-0 mb-2 mt-lg-0 mt-2 pl-0' lg='2' sm='12'>
+                            <CardText className='col-title mb-md-2 mb-0'>จำนวน</CardText>
+                        </Col>
+                        {
+                            discount &&
+                            <Col className='mb-lg-0 mb-2 mt-lg-0 mt-2 pl-0' lg='1' sm='12'>
+                                <CardText className='col-title mb-md-50 mb-0'>ส่วนลด</CardText>
+                                <Dropdown isOpen={dropdownOpen} toggle={() => setDropdownOpen(prevState => !prevState)} className='custom-dropdown'>
+                                    <DropdownToggle caret>
+                                        {discountUnit}
+                                        <ChevronDown  size={15}/>
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                        <DropdownItem onClick={() => setDiscountUnit('(%)')}>เปอร์เซ็นต์(%)</DropdownItem>
+                                        <DropdownItem onClick={() => setDiscountUnit('(฿)')}>จำนวนเงิน(฿)</DropdownItem>
+                                    </DropdownMenu>
+                                </Dropdown>
+                            </Col>
+                        }
+                        {
+                            tax &&
+                            <Col className='mb-lg-0 mb-2 mt-lg-0 mt-2 pl-0' lg='1' sm='12'>
+                                <CardText className='col-title mb-md-50 mb-0'>ภาษี</CardText>
+                            </Col>
+                        }
+                        <Col
+                            className='my-lg-0 my-2 pl-0'
+                            lg={!discount && !tax ? '2' : discount && !tax ? '2' : !discount && tax ? '2' : '1'}
+                            sm='12'>
+                            <CardText className='col-title mb-md-2 mb-0'>หน่วย</CardText>
+                        </Col>
+                        <Col
+                            className='my-lg-0 mt-2 pl-0'
+                            lg={!discount && !tax ? '2' : '1'}
+                            sm='12'>
+                            <CardText className='col-title mb-md-50 mb-0'>ราคาต่อหน่วย</CardText>
+                        </Col>
+                        <Col
+                            className='my-lg-0 mt-2 pl-0'
+                            lg='2'
+                            sm='12'>
+                            <CardText className='col-title mb-md-50 mb-0'>ราคารวม</CardText>
+                        </Col>
+                    </Row>
+                    <hr className='m-0' />
                     <Repeater count={count}>
                         {i => {
                             const Tag = i === 0 ? 'div' : SlideDown
@@ -295,43 +259,53 @@ const AddCard = () => {
                                     <Row>
                                         <Col className='d-flex product-details-border position-relative pr-0' sm='12'>
                                             <Row className='w-100 pr-lg-0 pr-1 py-2'>
-                                                <Col className='mb-lg-0 mb-2 mt-lg-0 mt-2' lg='5' sm='12'>
-                                                    <CardText className='col-title mb-md-50 mb-0'>Item</CardText>
+                                                <Col className='mb-lg-0 mb-2 mt-lg-0 mt-2' lg='4' sm='12'>
                                                     <Input type='select' className='item-details'>
                                                         <option>App Design</option>
                                                         <option>App Customization</option>
                                                         <option>ABC Template</option>
                                                         <option>App Development</option>
                                                     </Input>
-                                                    <Input className='mt-2' type='textarea' rows='1' defaultValue='Customization & Bug Fixes' />
+                                                    <Input className='mt-2' type='textarea' rows='1' defaultValue='' />
                                                 </Col>
-                                                <Col className='my-lg-0 my-2' lg='3' sm='12'>
-                                                    <CardText className='col-title mb-md-2 mb-0'>Cost</CardText>
-                                                    <Input type='number' defaultValue='24' placeholder='24' />
-                                                    <div className='mt-2'>
-                                                        <span>Discount:</span> <span>0%</span>
-                                                        <span id={`tax1-${i}`} className='ml-50'>
-                                                            0%
-                                                        </span>
-                                                        <span id={`tax2-${i}`} className='ml-50'>
-                                                            0%
-                                                        </span>
-                                                        {/* <UncontrolledTooltip target={`tax1-${i}`}>Tax 1</UncontrolledTooltip>
-                                                        <UncontrolledTooltip target={`tax2-${i}`}>Tax 2</UncontrolledTooltip> */}
-                                                    </div>
+                                                <Col className='my-lg-0 my-2 pl-0' lg='2' sm='12'>
+                                                    <Input type='number' className='text-right' defaultValue='1' placeholder='' />
                                                 </Col>
-                                                <Col className='my-lg-0 my-2' lg='2' sm='12'>
-                                                    <CardText className='col-title mb-md-2 mb-0'>Qty</CardText>
-                                                    <Input type='number' defaultValue='1' placeholder='1' />
+                                                {
+                                                    discount &&
+                                                    <Col className='mb-lg-0 mb-2 mt-lg-0 mt-2 pl-0' lg='1' sm='12'>
+                                                        <Input type='text' rows='1' className='text-right' defaultValue='1' />
+                                                    </Col>
+                                                }
+                                                {
+                                                    tax &&
+                                                    <Col className='mb-lg-0 mb-2 mt-lg-0 mt-2 pl-0' lg='1' sm='12'>
+                                                        <Input type='text' rows='1' className='text-right' defaultValue='1' />
+                                                    </Col>
+                                                }
+                                                <Col
+                                                    className='my-lg-0 my-2 pl-0'
+                                                    lg={!discount && !tax ? '2' : discount && !tax ? '2' : !discount && tax ? '2' : '1'}
+                                                    sm='12'>
+                                                    <Input type='select' className='item-details'>
+                                                        <option>ชิ้น</option>
+                                                        <option>กล่อง</option>
+                                                        <option>แพค</option>
+                                                    </Input>
                                                 </Col>
-                                                <Col className='my-lg-0 mt-2' lg='2' sm='12'>
-                                                    <CardText className='col-title mb-md-50 mb-0'>Price</CardText>
-                                                    <CardText className='mb-0'>$24.00</CardText>
+                                                <Col
+                                                    className='my-lg-0 mt-2 pl-0'
+                                                    lg={!discount && !tax ? '2' : '1'}
+                                                    sm='12'>
+                                                    <Input type='number' className='text-right' defaultValue='1' placeholder='' />
+                                                </Col>
+                                                <Col className='my-lg-0 mt-2 pl-0 text-right' lg='1' sm='12'>
+                                                    <CardText className='mb-0'>24.00</CardText>
+                                                </Col>
+                                                <Col className='my-lg-0 mt-2 p-0 text-center' lg='1' sm='12'>
+                                                    <X size={18} className='cursor-pointer bg-danger delete-btn' onClick={deleteForm} />
                                                 </Col>
                                             </Row>
-                                            <div className='d-flex flex-column align-items-center justify-content-start border-left invoice-product-actions py-50 px-25'>
-                                                <X size={18} className='cursor-pointer' onClick={deleteForm} />
-                                            </div>
                                         </Col>
                                     </Row>
                                 </Tag>
@@ -342,7 +316,7 @@ const AddCard = () => {
                         <Col sm='12' className='px-0'>
                             <Button.Ripple color='primary' size='sm' className='btn-add-new' onClick={() => setCount(count + 1)}>
                                 <Plus size={14} className='mr-25'></Plus>
-                                <span className='align-middle'>Add Item</span>
+                                <span className='align-middle'>เพิ่มแถวรายการ</span>
                             </Button.Ripple>
                         </Col>
                     </Row>
@@ -353,7 +327,6 @@ const AddCard = () => {
                             <CustomInput
                                 type="checkbox"
                                 id="electronicSign"
-                                // onChange={() => handleCheckbox('tax')}
                                 label='ลายเซ็นอิเล็กทรอนิกส์และตรายาง' />
                         </div>
                         <Row>
@@ -370,15 +343,21 @@ const AddCard = () => {
                     <Col className='d-flex mr-2'>
                         <Col>
                             <p>รวมเป็นเงิน</p>
-                            <p>ส่วนลด <Input type='text' name='totalDiscount' />%</p>
+                            <div className='d-flex'>ส่วนลด
+                            <Input
+                                    type='text'
+                                    name='totalDiscount'
+                                    className='mr-1 ml-1 small-input text-right'
+                                    defaultValue='0.00'
+                                /> %</div>
                             <p>ราคาหลังหักส่วนลด</p>
                             <p>จำนวนเงินรวมทั้งสิ้น</p>
                         </Col>
                         <Col className='d-flex flex-column align-items-end'>
-                            <p>0.00</p>
-                            <p>0.00</p>
-                            <p>0.00</p>
-                            <p>0.00</p>
+                            <p className='font-weight-600'>0.00</p>
+                            <p className='font-weight-600'>0.00</p>
+                            <p className='font-weight-600'>0.00</p>
+                            <p className='font-weight-600'>0.00</p>
                         </Col>
                     </Col>
                 </Row>
