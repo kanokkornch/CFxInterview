@@ -8,8 +8,7 @@ import {
     Form, 
     Label, 
     Input, 
-    CustomInput, 
-    Table,
+    CustomInput,
     CardBody,
     CardText
 } from 'reactstrap'
